@@ -4,7 +4,6 @@
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import URL, create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from models.base_model import Base
 from os import getenv
 
 
@@ -84,9 +83,16 @@ class DBStorage:
     def reload(self):
         """create all tables in the database"""
 
+        from models.user import User
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.place import Place
+        from models.review import Review
+        from models.base_model import Base
+
         Base.metadata.create_all(self.__engine)
 
-        Session = scoped_session(
-            sessionmaker(bind=self.__engine, expire_on_commit=False)
-        )
-        self.__session = Session()
+        Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        
+        self.__session = scoped_session(Session)
