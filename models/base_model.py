@@ -14,7 +14,7 @@ Base = declarative_base()
 
 class BaseModel(Base):
     """A base class for all hbnb models"""
-    __tablename__ = "base"
+    # __tablename__ = "base"
     
     id = Column(String(60), primary_key=True, autoincrement=True,
                 unique=True, nullable=False)
