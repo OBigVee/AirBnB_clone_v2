@@ -3,7 +3,7 @@
 import os
 
 
-if os.getenv("HBNB_TYPE_STORAGE") == "db":
+if os.environ.get("HBNB_TYPE_STORAGE") == "db":
     """a conditional depending of the value of the environment variable"""
     from models.engine.db_storage import DBStorage
 
