@@ -4,6 +4,7 @@
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import URL, create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+import os
 from os import getenv
 
 
@@ -19,19 +20,19 @@ class DBStorage:
         dialect = "mysql"
         driver = "mysqldb"
 
-        url_obj = URL.create(
-            dialect + driver,
-            username=getenv("HBNB_MYSQL_USER"),
-            password=getenv("HBNB_MYSQL_PWD"),
-            host=getenv("HBNB_MYSQL_HOST", default="localhost"),
-            database=getenv("HBNB_MYSQL_DB"),
-        )
-        # cred = ["HBNB_MYSQL_USER","HBNB_MYSQL_PWD",
-        #         "HBNB_MYSQL_HOST","HBNB_MYSQL_DB"]
-        # env_var = [os.environ.get(env) for env in cred ]
-        # engine = "mysql+mysqldb://{}:{}@{}/{}".format(*env_var)
+        # url_obj = URL.create(
+        #     dialect + driver,
+        #     username=getenv("HBNB_MYSQL_USER"),
+        #     password=getenv("HBNB_MYSQL_PWD"),
+        #     host=getenv("HBNB_MYSQL_HOST", default="localhost"),
+        #     database=getenv("HBNB_MYSQL_DB"),
+        # )
+        cred = ["HBNB_MYSQL_USER","HBNB_MYSQL_PWD",
+                "HBNB_MYSQL_HOST","HBNB_MYSQL_DB"]
+        env_var = [os.environ.get(env) for env in cred ]
+        engine = "mysql+mysqldb://{}:{}@{}/{}".format(*env_var)
 
-        self.__engine = create_engine(url_obj, pool_pre_ping=True)
+        self.__engine = create_engine(engine, pool_pre_ping=True)
 
         if getenv("HBNB_ENV") == "test":
             from models.base_model import Base
