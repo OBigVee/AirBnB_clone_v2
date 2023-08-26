@@ -9,7 +9,7 @@ class FileStorage:
     __file_path = "file.json"
     __objects = {}
 
-    # @classmethod 
+    # @classmethod
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
         # return FileStorage.__objects
@@ -17,7 +17,7 @@ class FileStorage:
             return self.__objects
         else:
             filter_dict = {}
-            for k,v in self.__objects.items():
+            for k, v in self.__objects.items():
                 if type(v) is cls:
                     filter_dict[k] = v
             return filter_dict
@@ -81,12 +81,12 @@ class FileStorage:
         #     obj_key = obj.to_dict()["__class__"] + "." + obj.id
         #     if obj_key in self.__objects.keys():
         #         del self.__objects[obj_key]
-        # if obj != None: 
+        # if obj != None:
         if obj and isinstance(
             obj, (BaseModel, State, Place, Amenity, City, Review, User)
         ):
-            obj_key = obj.to_dict()["__class__"]+ "." + obj.id
+            obj_key = obj.to_dict()["__class__"] + "." + obj.id
             if obj_key in self.__objects.keys():
                 del self.__objects[obj_key]
-            
-        #return
+
+        # return
