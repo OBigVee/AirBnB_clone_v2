@@ -168,9 +168,11 @@ class HBNBCommand(cmd.Cmd):
             if not hasattr(obj_kwargs, 'id'):
                 obj_kwargs['id'] = str(uuid.uuid4())
             if not hasattr(obj_kwargs, 'created_at'):
-                obj_kwargs['created_at'] = str(datetime.now())
+                obj_kwargs['created_at'] = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f"))
+                
             if not hasattr(obj_kwargs, 'updated_at'):
-                obj_kwargs['updated_at'] = str(datetime.now())
+                obj_kwargs['updated_at'] = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f"))
+
             new_instance = HBNBCommand.classes[class_name](**obj_kwargs)
             new_instance.save()
             print(new_instance.id)
@@ -181,18 +183,6 @@ class HBNBCommand(cmd.Cmd):
                     setattr(new_instance, key, value)
             new_instance.save()
             print(new_instance.id)
-
-        # if not args:
-        #     print("** class name missing **")
-        #     return
-        # elif args not in HBNBCommand.classes:
-        #     print("** class doesn't exist **")
-        #     return
-
-        # new_instance = HBNBCommand.classes[args]()
-        # storage.save()
-        # print(new_instance.id)
-        # storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -265,23 +255,45 @@ class HBNBCommand(cmd.Cmd):
         print("Destroys an individual instance of a class")
         print("[Usage]: destroy <className> <objectId>\n")
 
-    def do_all(self, args):
+    def do_all(self, line):
         """ Shows all objects, or all objects of a class"""
-        print_list = []
+        # print_list = []
 
-        if args:
-            args = args.split(' ')[0]  # remove possible trailing args
-            if args not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+        # if args:
+        #     args = args.split(' ')[0]  # remove possible trailing args
+        #     if args not in HBNBCommand.classes:
+        #         print("** class doesn't exist **")
+        #         return
+        #     for k, v in storage.__objects.items():
+        #         if k.split('.')[0] == args:
+        #             print_list.append(str(v))
+        # else:
+        #     for k, v in storage._FileStorage__objects.items():
+        #         print_list.append(str(v))
+
+        # print(print_list)
+        argv = line.split()
+        if len(argv) >= 1 and argv[0] not in self.classes:
+            print("** class doesn't exist **")
+        elif len(argv) >= 1 and argv[0] in self.classes:
+            # Print a list containing only specified class objects
+            return_list = []
+            storage.reload()
+            objs = storage.all()
+            for key, obj in objs.items():
+                if key == ("" + argv[0] + "." + obj.__dict__["id"]):
+                    return_list.append(obj.__str__())
+            print(return_list)
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
+            # Print a list containing all class objects in storage
+            return_list = []
+            storage.reload()
+            objs = storage.all()
+            for key, obj in objs.items():
+                return_list.append(obj.__str__())
+            print(return_list)
 
-        print(print_list)
+        
 
     def help_all(self):
         """ Help information for the all command """
