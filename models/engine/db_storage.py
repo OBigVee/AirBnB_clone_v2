@@ -70,7 +70,7 @@ class DBStorage:
                 key = f"{cls}.__name__.{obj}.id"
                 objects[key] = obj
         else:
-            for model in [State, City]:  # , User,  Amenity, Place, Review]:
+            for model in [State, City, User]: #  Amenity, Place, Review]:
                 for obj in self.__session.query(model):
                     key = f"{model.__name__}.{obj.id}"
                     objects[key] = obj
