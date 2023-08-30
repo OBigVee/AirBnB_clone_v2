@@ -70,11 +70,23 @@ class DBStorage:
                 key = f"{cls}.__name__.{obj}.id"
                 objects[key] = obj
         else:
-            for model in [User, State, City, Amenity, Place, Review]:
-                for obj in self.__session.query(model).all():
-                    key = f"{model}.__name__.{obj}.id"
+            for model in [State, City]:  # , User,  Amenity, Place, Review]:
+                for obj in self.__session.query(model):
+                    key = f"{model.__name__}.{obj.id}"
                     objects[key] = obj
         return objects
+
+        # class_list = [State, City]#, User, Place, Review, Amenity]
+        # objs = {}
+        # if cls is not None:
+        #     for obj in self.__session.query(cls).all():
+        #         objs.update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
+        # else:
+        #     for class_item in class_list:
+        #         for obj in self.__session.query(class_item).all():
+        #             key = obj.to_dict()['__class__'] + '.' + obj.id
+        #             objs.update({key: obj})
+        # return objs
 
     def new(self, obj):
         """add new object to the current database session"""
@@ -110,6 +122,6 @@ class DBStorage:
 
         self.__session = scoped_session(Session)
 
-    def close(self):
-        """call close method for committing obj to DB"""
-        self.__session.close()
+    # def close(self):
+    #     """call close method for committing obj to DB"""
+    #     self.__session.close()
