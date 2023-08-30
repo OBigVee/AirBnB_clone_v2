@@ -9,6 +9,7 @@ import os
 
 class Place(BaseModel, Base):
     """A place to stay"""
+
     if os.environ.get("HBNB_TYPE_STORAGE") == "db":
         __tablename__ = "places"
 
@@ -22,7 +23,9 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, default=0, nullable=False)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-        # amenity_ids = []
+        amenity_ids = []
+        reviews = relationship("Review", cascade="all, delete",
+                               backref="place")
     else:
         city_id = ""
         user_id = ""
@@ -35,3 +38,17 @@ class Place(BaseModel, Base):
         latitude = 0.0
         longitude = 0.0
         amenity_ids = []
+
+        @property
+        def reviews(self):
+            """Getter attributes for reviews"""
+            from models import storage
+            from models.review import Review
+
+            reviews = storage.all(Review)
+            result = []
+
+            for review in reviews.values():
+                if review.place_id == self.id:
+                    result.append(review)
+            return result
