@@ -3,8 +3,21 @@
 from models.base_model import BaseModel, Base
 
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, String, Integer, Float, ForeignKey
+from sqlalchemy import Column, String, Table, Integer, Float, ForeignKey
+from sqlalchemy.orm import relationship
 import os
+
+if os.environ.get("HBNB_TYPE_STORAGE") == "db":
+    place_amenity = Table("place_amenity", Base.metadata,
+                          Column("place_id", String(60),
+                                 ForeignKey("places.id"),
+                                 primary_key=True,
+                                 nullable=False), Column(
+                                     "amenity_id",
+                                     String(60),
+                                     ForeignKey("amenities.id"),
+                                     primary_key=True,
+                                     nullable=False))
 
 
 class Place(BaseModel, Base):
@@ -24,8 +37,12 @@ class Place(BaseModel, Base):
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
         amenity_ids = []
+
         reviews = relationship("Review", cascade="all, delete",
                                backref="place")
+        amenities = relationship("Amenity", secondary=place_amenity,
+                                 backref="place_amenities", viewonly=False)
+
     else:
         city_id = ""
         user_id = ""
@@ -52,3 +69,17 @@ class Place(BaseModel, Base):
                 if review.place_id == self.id:
                     result.append(review)
             return result
+
+        @property
+        def amenities(self):
+            """Amenity getter"""
+            return self.amenity_ids
+
+        @amenities.setter
+        def amenities(self, obj):
+            """A setter for amenities"""
+            from models.amenity import Amenity
+
+            if isinstance(obj, Amenity):
+                if obj.id not in self.amenity_ids:
+                    self.amenity_ids.append(obj.id)
