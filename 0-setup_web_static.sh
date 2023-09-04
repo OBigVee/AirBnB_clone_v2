@@ -30,20 +30,46 @@ html_content="<html><head></head><body>Test only</body></html>"
 echo "$html_content" > "$web_static_releases/index.html"
 
 # create or update symbolic link
-if [ -L "$web_static_current" ]; then
-    rm -f "$web_static_current"
-fi
-ln -s "$web_static_releases" "$web_static_current"
-chown -h ubuntu:ubuntu "$web_static_current"
+# if [ -L "$web_static_current" ]; then
+#     rm -f "$web_static_current"
+# fi
+ln -sf "$web_static_releases" "$web_static_current"
+chown -R ubuntu:ubuntu "/data/"
 
+SERVER=$(hostname)
+
+SERVER_CONFIG="server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name_;
+
+    location / {
+            add_header X-Served-By
+            try_files \$uri \$uri/ =404;
+
+    }
+
+    location /hbnb_static {
+        add_header X-Served-By '$SERVER';
+        alias /data/web_static/current;
+    }
+}"
+base -c "echo -e '$SERVER_CONFIG' > /etc/nginx/sites-available/default"
+/etc/init.d/nginx restart
+
+exit 0
 # Update Nginx config with alias
-ng_config="/etc/nginx/sites-available/default"
-if ! grep -q "location /hbnb_static" "$nginx_config"; then
-    sed -i '/server_name _;/a \
-    location /hbnb_static/ {\
-        alias /data/web_static/current/;\
-    }' "$ng_config"
-    service nginx restart
-fi
+# ng_config="/etc/nginx/sites-available/default"
+# if ! grep -q "location /hbnb_static" "$nginx_config"; then
+#     sed -i '/server_name _;/a \
+#     location /hbnb_static/ {\
+#         alias /data/web_static/current/;\
+#     }' "$ng_config"
+#     service nginx restart
+# fi
 
-echo "Web server setup completed!"
+# echo "Web server setup completed!"
