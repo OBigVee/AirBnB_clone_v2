@@ -2,11 +2,11 @@
 # script install and setup nginx web servers for the deployment of web_static
 
 if [ "$(id -u)" -ne 0 ]; then
-    echo "run script with sudo or as root"
+    echo "Run the script with sudo or as root."
     exit 1
 fi
 
-# update servers repository and install nginx if not already installed
+# update server's repository and install nginx if not already installed
 if ! [ -x "$(command -v nginx)" ]; then
     apt-get update
     apt-get -y install nginx
@@ -14,9 +14,9 @@ fi
 
 # create necessary directories if they don't exist
 mkdir -p /data/web_static/shared/
-mkdir -p /data/web_static/realeases/test/
+mkdir -p /data/web_static/releases/test/
 
-cat << EOF | sudo tee /data/web_static/realeases/test/index.html
+cat << EOF | sudo tee /data/web_static/releases/test/index.html
 <html>
     <head>
     </head>
@@ -38,7 +38,7 @@ SERVER_CONFIG="server {
     root /var/www/html;
     index index.html index.htm index.nginx-debian.html;
 
-    server_name_;
+    server_name _;
 
     location / {
             add_header X-Served-By '$SERVER';
@@ -50,7 +50,7 @@ SERVER_CONFIG="server {
         alias /data/web_static/current;
     }
 }"
-base -c "echo -e '$SERVER_CONFIG' > /etc/nginx/sites-available/default"
-/etc/init.d/nginx restart
+echo -e "$SERVER_CONFIG" > /etc/nginx/sites-available/default
+systemctl restart nginx
 
 exit 0
