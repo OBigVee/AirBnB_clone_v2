@@ -7,17 +7,15 @@ from fabric.api import local
 
 def do_pack():
     """ generate a .tgz archive from all the files in web_static folder"""
-    # run("mkdir /web_static")
-    try:    
-        time = datetime.now().strftime("%Y%m%dT%H%M%S")
+    # run("mkdir /web_static")   
+    time = datetime.now().strftime("%Y%m%dT%H%M%S")
         
-        local("mkdir -p versions")
+    local("mkdir -p versions")
 
-        archive_name = f"web_static_{time}.tgz"
+    archive_name = f"web_static_{time}.tgz"
 
-        local(f"tar -czvf versions/{archive_name} web_static")
-        
+    result = local(f"tar -czvf versions/{archive_name} web_static")
+    if result.succeeded:
         return f"versions/{archive_name}"
-    
-    except Exception:
+    else:
         return None
