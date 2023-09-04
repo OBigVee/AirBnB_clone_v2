@@ -18,22 +18,35 @@ web_static_releases="$web_static_dir/releases/test"
 web_static_shared="$web_static_dir/shared"
 web_static_current="$web_static_dir/current"
 
-for dir in "$web_static_dir" "$web_static_releases" "$web_static_shared"; do
-    if ! [ -d "$dir" ]; then
-        mkdir -p "$dir"
-        chown -R ubuntu:ubuntu "$dir"
-    fi
-done
+mkdir -p /data/web_static/shared/
+mkdir -p /data/web_static/realeases/test/
 
-# create test html file
-html_content="<html><head></head><body>Test only</body></html>"
-echo "$html_content" > "$web_static_releases/index.html"
+cat << EOF | tee /data/web_static/realeases/test/index.html
+<html>
+    <head>
+    </head>
+    <body>
+        Holberton School
+    </body>
+</html>
+EOF
+
+# for dir in "$web_static_dir" "$web_static_releases" "$web_static_shared"; do
+#     if ! [ -d "$dir" ]; then
+#         mkdir -p "$dir"
+#         chown -R ubuntu:ubuntu "$dir"
+#     fi
+# done
+
+# # create test html file
+# html_content="<html><head></head><body>Test only</body></html>"
+# echo "$html_content" > "$web_static_releases/index.html"
 
 # create or update symbolic link
 # if [ -L "$web_static_current" ]; then
 #     rm -f "$web_static_current"
 # fi
-ln -sf "$web_static_releases" "$web_static_current"
+ln -sf /data/web_static/releases/test/ /data/web_static/current
 chown -R ubuntu:ubuntu "/data/"
 
 SERVER=$(hostname)
@@ -48,7 +61,7 @@ SERVER_CONFIG="server {
     server_name_;
 
     location / {
-            add_header X-Served-By
+            add_header X-Served-By '$SERVER';
             try_files \$uri \$uri/ =404;
 
     }
