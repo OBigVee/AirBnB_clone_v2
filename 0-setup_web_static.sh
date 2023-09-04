@@ -16,7 +16,7 @@ fi
 mkdir -p /data/web_static/shared/
 mkdir -p /data/web_static/realeases/test/
 
-cat << EOF | tee /data/web_static/realeases/test/index.html
+cat << EOF | sudo tee /data/web_static/realeases/test/index.html
 <html>
     <head>
     </head>
