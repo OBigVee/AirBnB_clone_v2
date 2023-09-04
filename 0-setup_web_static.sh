@@ -1,21 +1,15 @@
 #!/usr/bin/env bash
 # script install and setup nginx web servers for the deployment of web_static
 
-if [ "$(id -u)" -ne 0 ]; then
-    echo "Run the script with sudo or as root."
-    exit 1
-fi
-
 # update server's repository and install nginx if not already installed
-if ! [ -x "$(command -v nginx)" ]; then
-    apt-get update
-    apt-get -y install nginx
-fi
+apt-get update
+apt-get -y install nginx
 
 # create necessary directories if they don't exist
 mkdir -p /data/web_static/shared/
 mkdir -p /data/web_static/releases/test/
 
+# create test html file
 cat << EOF | sudo tee /data/web_static/releases/test/index.html
 <html>
     <head>
@@ -26,9 +20,13 @@ cat << EOF | sudo tee /data/web_static/releases/test/index.html
 </html>
 EOF
 
+# create a symbolic linking to release/test/ dir
 ln -sf /data/web_static/releases/test/ /data/web_static/current
+
+# give ownership of /data/ to the current user
 chown -R ubuntu:ubuntu /data/
 
+# set up nginx 
 SERVER=$(hostname)
 
 SERVER_CONFIG="server {
