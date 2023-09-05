@@ -21,10 +21,10 @@ cat << EOF | sudo tee /data/web_static/releases/test/index.html
 EOF
 
 # create a symlink to ..release/test/ dir
-ln -sf /data/web_static/releases/test/ /data/web_static/current
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
 # give ownership of /data/ to the current user
-chown -R ubuntu:ubuntu /data/
+sudo chown -R ubuntu:ubuntu /data/
 
 # set up nginx server configuration
 SERVER=$(hostname)
