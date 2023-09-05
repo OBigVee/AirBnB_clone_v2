@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """fabric script generates a .tgz archive from the contents of web_static folder"""
 
 from datetime import datetime
