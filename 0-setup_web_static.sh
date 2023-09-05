@@ -10,7 +10,7 @@ mkdir -p /data/web_static/shared/
 mkdir -p /data/web_static/releases/test/
 
 # create initial html
-cat << EOF | tee /data/web_static/releases/test/index.html
+cat << EOF | sudo tee /data/web_static/releases/test/index.html
 <html>
   <head>
   </head>
