@@ -6,7 +6,7 @@ from datetime import datetime
 import os
 
 env.hosts = ["100.25.144.235", "3.85.136.215"]
-env.user = ["ubuntu"]
+env.user = "ubuntu"
 
 
 # @runs_once
