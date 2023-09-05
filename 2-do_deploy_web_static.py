@@ -17,7 +17,7 @@ def do_pack():
     if not os.path.isdir("versions"):
         os.mkdir("versions")
 
-    archive_name = f"versions/web_static_{cur_time}.tgz"
+    archive_name = "versions/web_static_{}.tgz".format(cur_time)
     try:
         print("Packing web_static to {}".format(archive_name))
         result = local("tar -czvf {} web_static/".format(archive_name))
