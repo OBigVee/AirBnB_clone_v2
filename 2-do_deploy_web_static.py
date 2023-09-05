@@ -37,7 +37,7 @@ def do_deploy(archive_path):
     #  upload archive to server
     put(archive_path, '/tmp/')
     run('mkdir -p {}'.format(path))
-    run('tar -xvzf /tmp/{} -C {}'.format(basename, path))
+    run('tar -xzf /tmp/{} -C {}'.format(basename, path))
     run('mv {}/web_static/* {}'.format(path, path))
     run('rm -rf {}/web_static/'.format(path))
     run('rm /data/web_static/current')
