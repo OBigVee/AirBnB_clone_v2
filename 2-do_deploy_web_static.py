@@ -1,32 +1,38 @@
 #!/usr/bin/python3
 """Fabric script distributes an archive to web-servers"""
 
-from fabric.api import put, env, local, run
+from fabric.api import put, env, local, run, runs_once
 from datetime import datetime
 import os
 
-env.hosts = ["100.25.144.235" ,"3.85.136.215"]
-env.user = "ubuntu"
+env.hosts = ["100.25.144.235", "3.85.136.215"]
 
 
+@runs_once
 def do_pack():
     """ generate a .tgz archive from all the files in web_static folder"""
 
-    time = datetime.now().strftime("%Y%m%dT%H%M%S")
+    cur_time = datetime.now().strftime("%Y%m%dT%H%M%S")
+    if not os.path.isdir("versions"):
+        os.mkdir("versions")
 
-    local("mkdir -p versions")
-
-    archive_name = f"web_static_{time}.tgz"
-
-    result = local(f"tar -czvf versions/{archive_name} web_static/")
-    if result.succeeded:
-        return f"versions/{archive_name}"
-    else:
+    archive_name = f"versions/web_static_{cur_time}.tgz"
+    try:
+        print(f"Packing web_static to {archive_name}")
+        result = local(f"tar -czvf {archive_name} web_static/")
+        if result.succeeded:
+            print(f"versions/{archive_name}")
+            archive_size = os.stat(archive_name).st_size
+            print(f"web_static packed: {archive_name}->{archive_size} Bytes")
+    except Exception:
         return None
-    
+
 
 def do_deploy(archive_path):
-    """distributes an archive to env.hosts web servers"""
+    """Deploys the static files to the host servers.
+    Args:
+        archive_path (str): The path to the archived static files.
+    """
 
     #  if empty argument passed
     if not os.path.exists(archive_path):
@@ -35,9 +41,8 @@ def do_deploy(archive_path):
     basename = os.path.basename(archive_path)
     path = basename.replace('.tgz', '')
     path = '/data/web_static/releases/{}'.format(path)
-    sucess = False
+    success = False
     try:
-
         #  upload archive to server
         put(archive_path, f'/tmp/{basename}')
         run('mkdir -p {}'.format(path))
@@ -47,21 +52,18 @@ def do_deploy(archive_path):
         run('rm -rf {}/web_static/'.format(path))
         run('rm -rf /data/web_static/current')
         run('ln -s {} /data/web_static/current'.format(path))
-        sucess =  True
+        success = True
     except Exception:
-        sucess = False
-    return sucess
+        success = False
+    return success
 
 # def do_deploy(archive_path):
 #     """function distributes the files in the archive to web-server"""
 #     if not os.path.exists(archive_path):
 #         return False
-    
 #     basename = os.path.basename(archive_path)
 #     path = basename.replace(".tgx", "")
-
 #     uncom_ar_path = f"/data/web_static/releases/{path}"
-        
 #     put(f"{archive_path}, /tmp/")
 #     run(f"mkdir -p {uncom_ar_path}")
 #     run(f"tar -xzvf /tmp/{basename} -C /{uncom_ar_path}")
