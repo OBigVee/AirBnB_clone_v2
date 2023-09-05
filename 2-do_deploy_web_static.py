@@ -22,22 +22,43 @@ def do_pack():
     else:
         return None
     
+
 def do_deploy(archive_path):
-    """function distributes the files in the archive to web-server"""
+    """distributes an archive to env.hosts web servers"""
+
+    #  if empty argument passed
     if not os.path.exists(archive_path):
         return False
-    
-    basename = os.path.basename(archive_path)
-    path = basename.replace(".tgx", "")
 
-    uncom_ar_path = f"/data/web_static/releases/{path}"
-        
-    put(f"{archive_path}, /tmp/")
-    run(f"mkdir -p {uncom_ar_path}")
-    run(f"tar -xzvf /tmp/{basename} -C /{uncom_ar_path}")
-    run(f"rm -rf /tmp")
-    run(f"mv {uncom_ar_path}/web_static/* /{uncom_ar_path}")
-    run(f"rm -rf {archive_path}/web_static/")
-    run("rm -rf /data/web_static/current")
-    run(f"ln -s {uncom_ar_path} /data/web_static/current")
+    basename = os.path.basename(archive_path)
+    path = basename.replace('.tgz', '')
+    path = '/data/web_static/releases/{}'.format(path)
+
+    #  upload archive to server
+    put(archive_path, '/tmp/')
+    run('mkdir -p {}'.format(path))
+    run('tar -xvzf /tmp/{} -C {}'.format(basename, path))
+    run('mv {}/web_static/* {}'.format(path, path))
+    run('rm -rf {}/web_static/'.format(path))
+    run('rm /data/web_static/current')
+    run('ln -s {} /data/web_static/current'.format(path))
     return True
+# def do_deploy(archive_path):
+#     """function distributes the files in the archive to web-server"""
+#     if not os.path.exists(archive_path):
+#         return False
+    
+#     basename = os.path.basename(archive_path)
+#     path = basename.replace(".tgx", "")
+
+#     uncom_ar_path = f"/data/web_static/releases/{path}"
+        
+#     put(f"{archive_path}, /tmp/")
+#     run(f"mkdir -p {uncom_ar_path}")
+#     run(f"tar -xzvf /tmp/{basename} -C /{uncom_ar_path}")
+#     run(f"rm -rf /tmp")
+#     run(f"mv {uncom_ar_path}/web_static/* /{uncom_ar_path}")
+#     run(f"rm -rf {archive_path}/web_static/")
+#     run("rm -rf /data/web_static/current")
+#     run(f"ln -s {uncom_ar_path} /data/web_static/current")
+#     return True
