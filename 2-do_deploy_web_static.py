@@ -34,8 +34,9 @@ def do_deploy(archive_path):
         
     put(f"{archive_path}, /tmp/")
     run(f"mkdir -p {uncom_ar_path}")
-    run(f"tar -xzvf /tmp/{basename} -C {uncom_ar_path}")
-    run(f"mv {uncom_ar_path}/web_static/* {uncom_ar_path}")
+    run(f"tar -xzvf /tmp/{basename} -C /{uncom_ar_path}")
+    run(f"rm -rf /tmp")
+    run(f"mv {uncom_ar_path}/web_static/* /{uncom_ar_path}")
     run(f"rm -rf {archive_path}/web_static/")
     run("rm -rf /data/web_static/current")
     run(f"ln -s {uncom_ar_path} /data/web_static/current")
