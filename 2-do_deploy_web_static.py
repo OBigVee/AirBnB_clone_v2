@@ -45,15 +45,31 @@ def do_deploy(archive_path):
     success = False
     try:
         #  upload archive to server
-        print("##### RUNING do_deploy function ######")
+        print("##### RUNNING do_deploy function ######\n")
+        print("putting archive in /tmp folder\n")
         put(archive_path, f'/tmp/{basename}')
+        print("finish /tmp/\n")
+        print("making dir for archive without extension\n")
         run('sudo mkdir -p {}'.format(path))
+        print("finish making dir without ext\n")
+        print("un-compress archive\n")
         run('sudo tar -xzf /tmp/{} -C {}'.format(basename, path))
-        run(f'sudo rm -rf /tmp/{basename}')
+        print("finish un-compress\n")
+        print("rm /tmp/ folder\n")
+        run(f'sudo rm -rf /tmp/{basename}\n')
+        print("finish removing /tmp\n")
+        print(f"mv {path}/web_static/* to {path}\n")
         run('sudo mv {}/web_static/* {}'.format(path, path))
+        print("done moving\n")
+        print(f"remove {path}/web_static/\n")
         run('sudo rm -rf {}/web_static/'.format(path))
+        print("done removing path\n")
+        print("removing /data/web_static/current\n ")
         run('sudo rm -rf /data/web_static/current')
+        print("done removing /data/web_static/current\n")
+        print("doing linking\n")
         run('sudo ln -s {} /data/web_static/current'.format(path))
+        print("linking done\n")
         success = True
     except Exception:
         success = False
