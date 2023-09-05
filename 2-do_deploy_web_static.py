@@ -31,12 +31,12 @@ def do_deploy(archive_path):
     path = basename.replace(".tgx", "")
 
     uncom_ar_path = f"/data/web_static/releases/{path}"
-        
+
     put(f"{archive_path}, /tmp/")
-    run(f"mkdir -p {uncom_ar_path}")
-    run(f"tar -xzvf /tmp/{basename} -C {uncom_ar_path}")
-    run(f"mv {uncom_ar_path}/web_static/* {uncom_ar_path}")
-    run(f"rm -rf {archive_path}/web_static/")
-    run("rm -rf /data/web_static/current")
-    run(f"ln -s {uncom_ar_path} /data/web_static/current")
+    run(f"sudo mkdir -p {uncom_ar_path}")
+    run(f"sudo tar -xzvf /tmp/{basename} -C {uncom_ar_path}")
+    run(f"sudo mv {uncom_ar_path}/web_static/* {uncom_ar_path}")
+    run(f"sudo rm -rf {archive_path}/web_static/")
+    run("sudo rm -rf /data/web_static/current")
+    run(f"sudo ln -s {uncom_ar_path} /data/web_static/current")
     return True
