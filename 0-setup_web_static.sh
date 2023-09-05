@@ -49,6 +49,6 @@ SERVER_CONFIG="server {
 	}
 }"
 bash -c "echo -e '$SERVER_CONFIG' > /etc/nginx/sites-available/default"
-/etc/init.d/nginx restart
+sudo /etc/init.d/nginx restart
 
 exit 0
