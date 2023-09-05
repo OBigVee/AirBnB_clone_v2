@@ -7,6 +7,8 @@ import os
 
 env.hosts = ["100.25.144.235" ,"3.85.136.215"]
 env.user = "ubuntu"
+
+
 def do_pack():
     """ generate a .tgz archive from all the files in web_static folder"""
 
@@ -33,16 +35,23 @@ def do_deploy(archive_path):
     basename = os.path.basename(archive_path)
     path = basename.replace('.tgz', '')
     path = '/data/web_static/releases/{}'.format(path)
+    sucess = False
+    try:
 
-    #  upload archive to server
-    put(archive_path, '/tmp/')
-    run('mkdir -p {}'.format(path))
-    run('tar -xzf /tmp/{} -C {}'.format(basename, path))
-    run('mv {}/web_static/* {}'.format(path, path))
-    run('rm -rf {}/web_static/'.format(path))
-    run('rm /data/web_static/current')
-    run('ln -s {} /data/web_static/current'.format(path))
-    return True
+        #  upload archive to server
+        put(archive_path, f'/tmp/{basename}')
+        run('mkdir -p {}'.format(path))
+        run('tar -xzf /tmp/{} -C {}'.format(basename, path))
+        run(f'rm -rf /tmp/{basename}')
+        run('mv {}/web_static/* {}'.format(path, path))
+        run('rm -rf {}/web_static/'.format(path))
+        run('rm -rf /data/web_static/current')
+        run('ln -s {} /data/web_static/current'.format(path))
+        sucess =  True
+    except Exception:
+        sucess = False
+    return sucess
+
 # def do_deploy(archive_path):
 #     """function distributes the files in the archive to web-server"""
 #     if not os.path.exists(archive_path):
