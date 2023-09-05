@@ -2,12 +2,12 @@
 # sets up your web servers for the deployment of web_static
 
 # Update servers repository and install nginx
-apt update
-apt -y install nginx
+sudo apt update
+sudo apt -y install nginx
 
 # create project directories
-mkdir -p /data/web_static/shared/
-mkdir -p /data/web_static/releases/test/
+sudo mkdir -p /data/web_static/shared/
+sudo mkdir -p /data/web_static/releases/test/
 
 # create initial html
 cat << EOF | sudo tee /data/web_static/releases/test/index.html
