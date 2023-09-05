@@ -6,13 +6,14 @@ from datetime import datetime
 import os
 
 env.hosts = ["100.25.144.235", "3.85.136.215"]
+env.user = ["ubuntu"]
 
 
 # @runs_once
 def do_pack():
     """ generate a .tgz archive from all the files in web_static folder"""
 
-    cur_time = datetime.now().strftime("%Y%m%dT%H%M%S")
+    cur_time = datetime.now().strftime("%Y%m%d%H%M%S")
     if not os.path.isdir("versions"):
         os.mkdir("versions")
 
@@ -51,7 +52,7 @@ def do_deploy(archive_path):
         run('sudo mv {}/web_static/* {}'.format(path, path))
         run('sudo rm -rf {}/web_static/'.format(path))
         run('sudo rm -rf /data/web_static/current')
-        run('ln -s {} /data/web_static/current'.format(path))
+        run('sudo ln -s {} /data/web_static/current'.format(path))
         success = True
     except Exception:
         success = False
