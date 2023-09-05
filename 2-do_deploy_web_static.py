@@ -45,6 +45,7 @@ def do_deploy(archive_path):
     success = False
     try:
         #  upload archive to server
+        print("##### RUNING do_deploy function ######")
         put(archive_path, f'/tmp/{basename}')
         run('sudo mkdir -p {}'.format(path))
         run('sudo tar -xzf /tmp/{} -C {}'.format(basename, path))
