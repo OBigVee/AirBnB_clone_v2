@@ -8,7 +8,7 @@ import os
 env.hosts = ["100.25.144.235", "3.85.136.215"]
 
 
-@runs_once
+# @runs_once
 def do_pack():
     """ generate a .tgz archive from all the files in web_static folder"""
 
@@ -45,12 +45,12 @@ def do_deploy(archive_path):
     try:
         #  upload archive to server
         put(archive_path, f'/tmp/{basename}')
-        run('mkdir -p {}'.format(path))
-        run('tar -xzf /tmp/{} -C {}'.format(basename, path))
-        run(f'rm -rf /tmp/{basename}')
-        run('mv {}/web_static/* {}'.format(path, path))
-        run('rm -rf {}/web_static/'.format(path))
-        run('rm -rf /data/web_static/current')
+        run('sudo mkdir -p {}'.format(path))
+        run('sudo tar -xzf /tmp/{} -C {}'.format(basename, path))
+        run(f'sudo rm -rf /tmp/{basename}')
+        run('sudo mv {}/web_static/* {}'.format(path, path))
+        run('sudo rm -rf {}/web_static/'.format(path))
+        run('sudo rm -rf /data/web_static/current')
         run('ln -s {} /data/web_static/current'.format(path))
         success = True
     except Exception:
