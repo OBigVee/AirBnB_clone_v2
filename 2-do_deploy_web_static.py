@@ -19,12 +19,12 @@ def do_pack():
 
     archive_name = f"versions/web_static_{cur_time}.tgz"
     try:
-        print(f"Packing web_static to {archive_name}")
-        result = local(f"tar -czvf {archive_name} web_static/")
+        print("Packing web_static to {}".format(archive_name))
+        result = local("tar -czvf {} web_static/".format(archive_name))
         if result.succeeded:
-            print(f"versions/{archive_name}")
+            print("versions/{}".format(archive_name))
             archive_size = os.stat(archive_name).st_size
-            print(f"web_static packed: {archive_name}->{archive_size} Bytes")
+            print("web_static packed: {}->{} Bytes".format(archive_name,archive_size))
     except Exception:
         return None
 
