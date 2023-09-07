@@ -70,7 +70,7 @@ class DBStorage:
                 key = f"{cls}.__name__.{obj}.id"
                 objects[key] = obj
         else:
-            for model in [State, City, User]: #  Amenity, Place, Review]:
+            for model in [State, City, User, Place, Review, Amenity]:
                 for obj in self.__session.query(model):
                     key = f"{model.__name__}.{obj.id}"
                     objects[key] = obj
@@ -122,6 +122,6 @@ class DBStorage:
 
         self.__session = scoped_session(Session)
 
-    # def close(self):
-    #     """call close method for committing obj to DB"""
-    #     self.__session.close()
+    def close(self):
+        """call close method for committing obj to DB"""
+        self.__session.close()

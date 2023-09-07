@@ -90,3 +90,9 @@ class FileStorage:
                 del self.__objects[obj_key]
 
         # return
+
+
+    def close(self):
+        """method deserializes JSON file to objects"""
+        self.reload()
+    
