@@ -35,17 +35,27 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Instantiates a new model"""
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = self.created_at
 
-        if len(kwargs) != 0:
-            kwargs.pop("__class__", None)
-            for key, value in kwargs.items():
-                if key in ["created_at", "updated_at"]:
-                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                setattr(self, key, value)
-        else:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = self.created_at
+        if kwargs:
+            for at in ['created_at', 'updated_at']:
+                if at in kwargs.keys():
+                    kwargs[at] = datetime.fromisoformat(kwargs[at])
+            if '__class__' in kwargs.keys():
+                del kwargs['__class__']
+            self.__dict__.update(kwargs)
+        # if len(kwargs) != 0:
+        #     kwargs.pop("__class__", None)
+        #     for key, value in kwargs.items():
+        #         if key in ["created_at", "updated_at"]:
+        #             value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+        #         setattr(self, key, value)
+        # else:
+        #     self.id = str(uuid.uuid4())
+        #     self.created_at = datetime.now()
+        #     self.updated_at = self.created_at
 
     def __str__(self):
         """Returns a string representation of the instance"""
@@ -54,9 +64,10 @@ class BaseModel:
             del obj['_sa_instance_state']
         except KeyError:
             pass
-        # cls = (str(type(self)).split(".")[-1]).split("'")[0]
-        return "[{}] ({}) {}".format(self.__class__.__name__,
-                                     self.id, obj)
+        cls = (str(type(self)).split(".")[-1]).split("'")[0]
+        return '[{}] ({}) {}'.format(cls, self.id, obj)
+        # return '[{}] ({}) {}'.format(self.__class__.__name__,
+        #                              self.id, obj)
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
