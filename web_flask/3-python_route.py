@@ -21,7 +21,7 @@ def Hbnb():
 def displayC(text):
     return f"C {text.replace('_', ' ')}"
 
-
+@app.route("/python")
 @app.route("/python/<text>")
 def python_is_cool(text):
     return f"Python {text.replace('_', ' ')}"
