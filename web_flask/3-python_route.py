@@ -23,7 +23,7 @@ def displayC(text):
 
 @app.route("/python")
 @app.route("/python/<text>")
-def python_is_cool(text):
+def python_is_cool(text="is cool"):
     return f"Python {text.replace('_', ' ')}"
 
 
