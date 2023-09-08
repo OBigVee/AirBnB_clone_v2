@@ -11,7 +11,7 @@ app.url_map.strict_slashes = False
 
 @app.teardown_appcontext
 def close_storage(exception=None):
-    """close the current sqlalchemy sessoin"""
+    """close the current sqlalchemy session"""
     storage.close()
 
 
